@@ -7,10 +7,12 @@ var uglify = require('gulp-uglify');
 var htmlmin = require('gulp-htmlmin');
 var browserSync = require('browser-sync').create();
 
+browserSync.init({
+	server: "dist"
+});
+
 function defaultTask(cb) {
-	browserSync.init({
-		server: "dist"
-	});
+
 	// place code for your default task here
 	// Watch .js files
 	gulp.watch('src/assets/js/*.js', function () {
@@ -53,11 +55,14 @@ gulp.task('bootstrap-js', function () {
 		// .pipe(uglify())
 		.pipe(gulp.dest("dist/assets/js"))
 });
+
 gulp.task('bootstrap-css', function () {
-	return gulp.src(['node_modules/bootstrap/scss/bootstrap.scss'])
+	gulp.watch('node_modules/bootstrap/scss/*.scss', function () {
+		return gulp.src(['node_modules/bootstrap/scss/bootstrap.scss'])
 		.pipe(sass().on('error', sass.logError))
 		.pipe(minifyCSS())
 		.pipe(gulp.dest("dist/assets/css"))
+	})
 });
 
 exports.default = defaultTask
